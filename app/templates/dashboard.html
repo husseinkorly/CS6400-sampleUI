@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+
+{% block content %}
+</br>
+<h1>Animal Dashboard</h1>
+</br>
+<form>
+  <div class="form-row">
+    <div>
+      {% for key, value in animalcap.items()%}
+      <button type="button" class="btn btn-primary">
+        {{key.capitalize() + " - vacancy"}} <span class="badge badge-light">{{ value }}</span>
+      </button>
+      {% endfor %}
+    </div>
+  </div>
+</form>
+</br>
+<input class="form-control col-md-3"  id="species" type="text" onkeyup="myFunction('species')" placeholder="Filter species">
+<input class="form-control col-md-3"  id="adoptability" type="text" onkeyup="myFunction('adoptability')" placeholder="Filter adoptability status">
+</br></br>
+  <table id="myTable" class="table table-hover table-sm">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Species</th>
+        <th scope="col">Breed</th>
+        <th scope="col">Sex</th>
+        <th scope="col">Age</th>
+        <th scope="col">Alteration Status</th>
+        <th scope="col">Adoptability Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for data in animals_data %}
+      <tr>
+        <td scope="row">
+          <form action="{{url_for('details', petid=data['petid'])}}" method="POST">
+            <input type="hidden" name="petid" value="{{data['petid']}}">
+            <a href="{{ url_for('details', petid=data['petid']) }}" class="nav-link">{{ data["name"] }}</a>
+          </form>
+        </td>
+        <td>{{ data["species"] }}</td>
+        <td>{{ data["breed"] }}</td>
+        <td>{{ data["sex"] }}</td>
+        <td>{{ data["age"] }}</td>
+        <td>{{ data["alteration_status"] }}</td>
+        <td>{{ data["adoption_status"] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <script>
+    function myFunction(col) {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById(col);
+      filter = input.value.toUpperCase();
+      table = document.getElementById("myTable");
+      tr = table.getElementsByTagName("tr");
+      for (i = 0; i < tr.length; i++) {
+        if(col == 'species'){
+          td = tr[i].getElementsByTagName("td")[1];
+        } else {
+          td = tr[i].getElementsByTagName("td")[6];
+        }
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
+    }
+    </script>
+</div>
+{% endblock %}
